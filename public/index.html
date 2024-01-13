@@ -32,14 +32,55 @@
 <body>
     
 
-<h1 class="mt-8 text-6xl text-center">Hello, World!</h1>
+<h1 class="mt-8 mb-8 text-4xl text-center">WP Notes</h1>
 
-    <h2 class="mt-4 text-2xl text-center">Sssh, we're only testing!</h2>
+<main x-data="app" class="flex justify-center">
+    <div id="sidebar-container" class="w-60 flex-shrink-0">
+        <div class="w-60 pr-3 mr-3 h-full border-r-2 border-gray-300">
+    <input type="search" class="w-full border-2 border-gray-300 rounded-md mb-4" placeholder="Search notes...">
+
+    <button @click="newNote" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded">
+        New Note
+    </button>
+
+    <template x-if="notes.length === 0">
+        <p class="text-gray-700">No notes found.</p>
+    </template>
+
+    <template x-if="notes.length > 0">
+        <div>
+            <p class="text-gray-700">Found <span x-text="notes.length"></span> notes.</p>
+            <ul>
+                <template x-for="note in notes" :key="note.id">
+                    <li class="mb-2">
+                        <a href="#" @click="openNote(note.id)" class="block text-gray-700 hover:text-gray-900" x-text="note.title"></a>
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </template>
+</div>
+    </div>
+    <div id="editor-container" class="w-1/2 max-w-3xl">
+        <div class="prose w-full ml-3">
+    <textarea x-ref="editor"></textarea>
+</div>
+    </div>
+</main>
 
 
     <footer class="">
 </footer>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+
+<script src="js/main.js"></script>
+
+<!-- Alpine plugins -->
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+
+<!-- Alpine core -->
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 </html>
