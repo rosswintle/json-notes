@@ -34,6 +34,8 @@
 
 <h1 class="mt-8 mb-8 text-4xl text-center">JSON Notes</h1>
 
+<p class="italic text-center mb-8">A simple Markdown note-taking app that stores notes in local JSON files. Use at your own risk.</p>
+
 <main x-data="app" class="flex justify-center">
     <div id="sidebar-container" class="w-60 flex-shrink-0">
         <div class="w-60 pr-3 mr-3 h-full border-r-2 border-gray-300">
@@ -66,7 +68,13 @@
                     <ul>
                         <template x-for="note in filteredNotes" :key="note.id">
                             <li class="mb-2">
-                                <a href="#" @click="openNote(note.id)" class="block text-gray-700 hover:text-gray-900" x-text="note.title"></a>
+                                <a
+                                    href="#"
+                                    @click.prevent="openNote(note.id)"
+                                    class="block text-gray-700 hover:text-gray-900"
+                                    :class="note.id === currentNote.id ? 'font-bold' : ''"
+                                    x-text="note.title">
+                                </a>
                             </li>
                         </template>
                     </ul>

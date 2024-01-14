@@ -28,7 +28,13 @@
                     <ul>
                         <template x-for="note in filteredNotes" :key="note.id">
                             <li class="mb-2">
-                                <a href="#" @click="openNote(note.id)" class="block text-gray-700 hover:text-gray-900" x-text="note.title"></a>
+                                <a
+                                    href="#"
+                                    @click.prevent="openNote(note.id)"
+                                    class="block text-gray-700 hover:text-gray-900"
+                                    :class="note.id === currentNote.id ? 'font-bold' : ''"
+                                    x-text="note.title">
+                                </a>
                             </li>
                         </template>
                     </ul>

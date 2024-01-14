@@ -8,12 +8,14 @@
 
 <h1 class="mt-8 mb-8 text-4xl text-center">JSON Notes</h1>
 
+<p class="italic text-center mb-8">A simple Markdown note-taking app that stores notes in local JSON files. Use at your own risk.</p>
+
 <main x-data="app" class="flex justify-center">
     <div id="sidebar-container" class="w-60 flex-shrink-0">
-        <?php includePart('../parts/sidebar.html', ['param' => 'value']) ?>
+        <?php includePart('../parts/sidebar.html', []) ?>
     </div>
     <div id="editor-container" class="w-1/2 max-w-3xl">
-        <?php includePart('../parts/editor.html', ['param' => 'value']) ?>
+        <?php includePart('../parts/editor.html', []) ?>
     </div>
 </main>
 
