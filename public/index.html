@@ -37,26 +37,41 @@
 <main x-data="app" class="flex justify-center">
     <div id="sidebar-container" class="w-60 flex-shrink-0">
         <div class="w-60 pr-3 mr-3 h-full border-r-2 border-gray-300">
-    <input type="search" class="w-full border-2 border-gray-300 rounded-md mb-4" placeholder="Search notes...">
-
-    <button @click="newNote" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded">
-        New Note
-    </button>
-
-    <template x-if="notes.length === 0">
-        <p class="text-gray-700">No notes found.</p>
+    <template x-if="! isFileOpen()">
+        <div>
+            <button id="newFileButton" @click="newFile" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded">
+                New File
+            </button>
+            <button id="openFileButton" @click="openFile" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded">
+                Open File
+            </button>
+        </div>
     </template>
 
-    <template x-if="notes.length > 0">
+    <template x-if="isFileOpen()">
         <div>
-            <p class="text-gray-700">Found <span x-text="notes.length"></span> notes.</p>
-            <ul>
-                <template x-for="note in notes" :key="note.id">
-                    <li class="mb-2">
-                        <a href="#" @click="openNote(note.id)" class="block text-gray-700 hover:text-gray-900" x-text="note.title"></a>
-                    </li>
-                </template>
-            </ul>
+            <input type="search" class="w-full border-2 border-gray-300 rounded-md mb-4" placeholder="Search notes...">
+
+            <button @click="newNote" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded">
+                New Note
+            </button>
+
+            <template x-if="notes.length === 0">
+                <p class="text-gray-700">No notes found.</p>
+            </template>
+
+            <template x-if="notes.length > 0">
+                <div>
+                    <p class="text-gray-700">Found <span x-text="notes.length"></span> notes.</p>
+                    <ul>
+                        <template x-for="note in notes" :key="note.id">
+                            <li class="mb-2">
+                                <a href="#" @click="openNote(note.id)" class="block text-gray-700 hover:text-gray-900" x-text="note.title"></a>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
         </div>
     </template>
 </div>

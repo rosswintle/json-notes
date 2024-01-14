@@ -30,10 +30,15 @@ document.addEventListener('alpine:init', () => {
             nextId: this.$persist(1),
             editor: null,
 
+            fileOpen: false,
+            fileHandle: null,
+
             init() {
                 console.log('Initing')
 
                 this.newEditor()
+
+                setInterval(this.maybeSaveFile.bind(this), 5000);
             },
 
             newEditor() {
@@ -84,7 +89,79 @@ document.addEventListener('alpine:init', () => {
             openNote(id) {
                 this.currentNote = this.notes.find(note => note.id === id)
                 this.newEditor()
-            }
+            },
+
+            isFileOpen() {
+                return this.fileHandle !== null
+            },
+
+            async newFile() {
+                const options = {
+                    types: [
+                        {
+                            description: 'JSON',
+                            accept: {
+                                'application/json': ['.json']
+                            }
+                        }
+                    ],
+                };
+                this.fileHandle = await window.showSaveFilePicker(options);
+                this.tags = []
+                this.nextId = 1
+                this.notes = []
+                await this.saveFile()
+            },
+
+            async openFile() {
+                const pickerOptions = {
+                    types: [
+                        {
+                            description: 'JSON',
+                            accept: {
+                                'application/json': ['.json']
+                            }
+                        }
+                    ],
+                };
+                // open file picker
+                [this.fileHandle] = await window.showOpenFilePicker( pickerOptions );
+
+                if (this.fileHandle.kind === 'file') {
+                    const file = await this.fileHandle.getFile();
+                    const fileContent = await file.text();
+                    const data = JSON.parse(fileContent);
+                    this.extractSaveData(data);
+                }
+            },
+
+            extractSaveData(data) {
+                this.tags = data.tags
+                this.nextId = data.nextId
+                this.notes = data.notes
+            },
+
+            makeSaveData() {
+                return {
+                    tags: this.tags,
+                    nextId: this.nextId,
+                    notes: this.notes
+                }
+            },
+
+            async saveFile() {
+                const writable = await this.fileHandle.createWritable();
+                const dataToSave = this.makeSaveData();
+                await writable.write(JSON.stringify(dataToSave, null, 2));
+                await writable.close();
+            },
+
+            async maybeSaveFile() {
+                if (this.isFileOpen()) {
+                    await this.saveFile()
+                }
+            },
+
         }
     })
 })
