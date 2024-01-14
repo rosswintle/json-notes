@@ -18,7 +18,12 @@ document.addEventListener('alpine:init', () => {
                 //     modified_at: '2021-01-01T00:00:00.000Z'
                 // }
             ]),
+
+            searchTerm: '',
+            filteredNotes: [],
+
             tags: this.$persist([]),
+
             currentNote: {
                 id: 0,
                 title: '',
@@ -60,6 +65,7 @@ document.addEventListener('alpine:init', () => {
                 let lines = this.currentNote.body.split('\n')
                 this.currentNote.title = this.makeTitle(lines[0])
 
+                // TODO: Only set this is content has changed?
                 this.currentNote.modified_at = new Date().toISOString()
                 let note = this.notes.find(note => note.id === this.currentNote.id)
                 if (note) {
@@ -91,6 +97,28 @@ document.addEventListener('alpine:init', () => {
                 this.newEditor()
             },
 
+            /**
+             * Search
+             */
+
+            searchNotes() {
+                console.log('Searching for ' + this.searchTerm)
+                if (this.searchTerm.length > 0) {
+                    const searchTermLower = this.searchTerm.toLowerCase();
+
+                    this.filteredNotes = this.notes.filter(note =>
+                            note.title.toLowerCase().includes(searchTermLower) ||
+                            note.body.toLowerCase().includes(searchTermLower)
+                    )
+                } else {
+                    this.filteredNotes = this.notes
+                }
+            },
+
+            /**
+             * File handling
+             */
+
             isFileOpen() {
                 return this.fileHandle !== null
             },
@@ -110,6 +138,8 @@ document.addEventListener('alpine:init', () => {
                 this.tags = []
                 this.nextId = 1
                 this.notes = []
+                this.filteredNotes = []
+                this.searchTerm = ''
                 await this.saveFile()
             },
 
@@ -139,6 +169,8 @@ document.addEventListener('alpine:init', () => {
                 this.tags = data.tags
                 this.nextId = data.nextId
                 this.notes = data.notes
+                this.filteredNotes = this.notes
+                this.searchTerm = ''
             },
 
             makeSaveData() {

@@ -50,21 +50,21 @@
 
     <template x-if="isFileOpen()">
         <div>
-            <input type="search" class="w-full border-2 border-gray-300 rounded-md mb-4" placeholder="Search notes...">
+            <input type="search" x-model="searchTerm" @input.debounce.500ms="searchNotes" class="w-full border-2 border-gray-300 rounded-md mb-4" placeholder="Search notes...">
 
             <button @click="newNote" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded">
                 New Note
             </button>
 
-            <template x-if="notes.length === 0">
+            <template x-if="filteredNotes.length === 0">
                 <p class="text-gray-700">No notes found.</p>
             </template>
 
-            <template x-if="notes.length > 0">
+            <template x-if="filteredNotes.length > 0">
                 <div>
-                    <p class="text-gray-700">Found <span x-text="notes.length"></span> notes.</p>
+                    <p class="text-gray-700 mb-4">Found <span x-text="filteredNotes.length"></span> notes.</p>
                     <ul>
-                        <template x-for="note in notes" :key="note.id">
+                        <template x-for="note in filteredNotes" :key="note.id">
                             <li class="mb-2">
                                 <a href="#" @click="openNote(note.id)" class="block text-gray-700 hover:text-gray-900" x-text="note.title"></a>
                             </li>
