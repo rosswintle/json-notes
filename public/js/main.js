@@ -19,6 +19,8 @@ document.addEventListener('alpine:init', () => {
                 // }
             ]),
 
+            archivedNotes: this.$persist([]),
+
             searchTerm: '',
             filteredNotes: [],
 
@@ -97,6 +99,16 @@ document.addEventListener('alpine:init', () => {
                 this.newEditor()
             },
 
+            archiveNote() {
+                let note = this.notes.find(note => note.id === this.currentNote.id)
+                if (note) {
+                    this.notes.splice(this.notes.indexOf(note), 1)
+                    this.archivedNotes.push(note)
+                    this.saveFile()
+                    this.newNote()
+                }
+            },
+
             /**
              * Search
              */
@@ -139,6 +151,7 @@ document.addEventListener('alpine:init', () => {
                 this.nextId = 1
                 this.notes = []
                 this.filteredNotes = []
+                this.archiveNotes = []
                 this.searchTerm = ''
                 await this.saveFile()
             },
@@ -170,6 +183,8 @@ document.addEventListener('alpine:init', () => {
                 this.nextId = data.nextId
                 this.notes = data.notes
                 this.filteredNotes = this.notes
+                // Archived notes added so needs a default
+                this.archivedNotes = data?.archivedNotes ?? []
                 this.searchTerm = ''
             },
 
@@ -177,7 +192,8 @@ document.addEventListener('alpine:init', () => {
                 return {
                     tags: this.tags,
                     nextId: this.nextId,
-                    notes: this.notes
+                    notes: this.notes,
+                    archivedNotes: this.archivedNotes
                 }
             },
 

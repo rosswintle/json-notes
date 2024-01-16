@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="min-h-full">
 
 <?php includePart('../parts/head.html', ['title' => $title]) ?>
 
-<?php includePart('../parts/header.html'); ?>
+<body class="h-full min-h-screen flex flex-col pt-12">
+    <?php includePart('../parts/header.html'); ?>
 
-<body>
     <?= $content ?>
 
     <?php includePart('../parts/footer.html') ?>

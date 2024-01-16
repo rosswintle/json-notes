@@ -1,10 +1,10 @@
-<div class="w-60 pr-3 mr-3 h-full border-r-2 border-gray-300">
+<div class="w-full pr-3 mr-3 h-full border-r-2 border-gray-300">
     <template x-if="! isFileOpen()">
-        <div>
-            <button id="newFileButton" @click="newFile" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded">
+        <div class="">
+            <button id="newFileButton" @click="newFile" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
                 New File
             </button>
-            <button id="openFileButton" @click="openFile" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded">
+            <button id="openFileButton" @click="openFile" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
                 Open File
             </button>
         </div>
@@ -14,7 +14,7 @@
         <div>
             <input type="search" x-model="searchTerm" @input.debounce.500ms="searchNotes" class="w-full border-2 border-gray-300 rounded-md mb-4" placeholder="Search notes...">
 
-            <button @click="newNote" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded">
+            <button @click="newNote" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
                 New Note
             </button>
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="min-h-full">
 
 <head>
     <meta charset="UTF-8">
@@ -26,25 +26,25 @@
     <meta name="twitter:image" content="">
 </head>
 
-<header class="">
+<body class="h-full min-h-screen flex flex-col pt-12">
+    <header class="">
 </header>
 
-<body>
     
 
-<h1 class="mt-8 mb-8 text-4xl text-center">JSON Notes</h1>
+<h1 class="mt-8 mb-8 text-4xl text-center font-mono text-3xl rotate-3 text-gray-700"> { JSON: Notes }</h1>
 
 <p class="italic text-center mb-8">A simple Markdown note-taking app that stores notes in local JSON files. Use at your own risk.</p>
 
-<main x-data="app" class="flex justify-center">
-    <div id="sidebar-container" class="w-60 flex-shrink-0">
-        <div class="w-60 pr-3 mr-3 h-full border-r-2 border-gray-300">
+<main x-data="app" class="flex justify-center pb-12">
+    <div id="sidebar-container" class="w-72 flex-shrink-0">
+        <div class="w-full pr-3 mr-3 h-full border-r-2 border-gray-300">
     <template x-if="! isFileOpen()">
-        <div>
-            <button id="newFileButton" @click="newFile" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded">
+        <div class="">
+            <button id="newFileButton" @click="newFile" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
                 New File
             </button>
-            <button id="openFileButton" @click="openFile" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded">
+            <button id="openFileButton" @click="openFile" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
                 Open File
             </button>
         </div>
@@ -54,7 +54,7 @@
         <div>
             <input type="search" x-model="searchTerm" @input.debounce.500ms="searchNotes" class="w-full border-2 border-gray-300 rounded-md mb-4" placeholder="Search notes...">
 
-            <button @click="newNote" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded">
+            <button @click="newNote" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
                 New Note
             </button>
 
@@ -85,14 +85,30 @@
 </div>
     </div>
     <div id="editor-container" class="w-1/2 max-w-3xl">
-        <div class="prose w-full ml-3">
-    <textarea x-ref="editor"></textarea>
+        <div id="editor-container">
+    <div id="editor-actions" class="flex justify-end items-center">
+        <button @click="archiveNote" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
+            Archive
+        </button>
+    </div>
+    <div class="w-full ml-3">
+        <textarea x-ref="editor"></textarea>
+    </div>
 </div>
     </div>
 </main>
 
 
-    <footer class="">
+    <footer class="mt-auto w-full flex justify-center py-4 border-t-2 border-gray-300 font-mono text-gray-700 text-md">
+    <div class="w-full max-w-4xl flex justify-between">
+        <ul id="left-footer flex">
+            <li class="inline-block"><a href="/">< Notes ></Notes></a></li>
+            <li class="inline-block"><a href="/changelog.html">< Changelog ></Changelog></a></li>
+        </ul>
+        <ul id="right-footer">
+            <li class="inline-block">Made by < <a href="https://rw.omg.lol">Ross Wintle ></a></li>
+        </ul>
+    </div>
 </footer>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">

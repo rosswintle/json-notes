@@ -1,3 +1,10 @@
-<div class="prose w-full ml-3">
-    <textarea x-ref="editor"></textarea>
+<div id="editor-container">
+    <div id="editor-actions" class="flex justify-end items-center">
+        <button @click="archiveNote" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
+            Archive
+        </button>
+    </div>
+    <div class="w-full ml-3">
+        <textarea x-ref="editor"></textarea>
+    </div>
 </div>
