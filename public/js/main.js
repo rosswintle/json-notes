@@ -37,7 +37,6 @@ document.addEventListener('alpine:init', () => {
             nextId: this.$persist(1),
             editor: null,
 
-            fileOpen: false,
             fileHandle: null,
 
             init() {
@@ -54,7 +53,8 @@ document.addEventListener('alpine:init', () => {
                 }
                 this.editor = new EasyMDE({
                     element: this.$refs.editor,
-                    initialValue: this.currentNote.body
+                    initialValue: this.currentNote.body,
+                    spellChecker: false,
                 })
                 this.editor.codemirror.on('change', () => {
                     this.currentNote.body = this.editor.value()
@@ -157,6 +157,10 @@ document.addEventListener('alpine:init', () => {
             },
 
             async openFile() {
+                // Save (if needed) and close the current file (doesn't actually close it)
+                await this.maybeSaveFile()
+                this.fileHandle = null
+
                 const pickerOptions = {
                     types: [
                         {
