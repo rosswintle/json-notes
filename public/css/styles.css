@@ -1158,6 +1158,18 @@ select {
   margin-bottom: 0;
 }
 
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.bottom-0 {
+  bottom: 0px;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -1185,10 +1197,6 @@ select {
 
 .mt-8 {
   margin-top: 2rem;
-}
-
-.mt-auto {
-  margin-top: auto;
 }
 
 .block {
@@ -1308,12 +1316,16 @@ select {
   padding-bottom: 3rem;
 }
 
+.pb-32 {
+  padding-bottom: 8rem;
+}
+
 .pr-3 {
   padding-right: 0.75rem;
 }
 
-.pt-12 {
-  padding-top: 3rem;
+.pt-10 {
+  padding-top: 2.5rem;
 }
 
 .text-center {

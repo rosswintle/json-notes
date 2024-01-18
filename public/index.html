@@ -29,7 +29,7 @@
     <meta name="twitter:image" content="">
 </head>
 
-<body class="h-full min-h-screen flex flex-col pt-12">
+<body class="relative h-full min-h-screen flex flex-col pt-10 pb-32">
     <header class="">
 </header>
 
@@ -37,7 +37,7 @@
 
 <h1 class="mt-8 mb-8 text-4xl text-center font-mono text-3xl rotate-3 text-gray-700"> { JSON: Notes }</h1>
 
-<p class="italic text-center mb-8">A simple Markdown note-taking app that stores notes in local JSON files. Use at your own risk.</p>
+<p class="italic text-center mb-8">A simple Markdown note-taking app that stores notes in local JSON files. Use at your own risk. Chrome/Chromium-only, sorry.</p>
 
 <main x-data="app" class="flex justify-center pb-12">
     <div id="sidebar-container" class="w-72 flex-shrink-0">
@@ -102,13 +102,14 @@
 </main>
 
 
-    <footer class="mt-auto w-full flex justify-center py-4 border-t-2 border-gray-300 font-mono text-gray-700 text-md">
+    <footer class="absolute bottom-0 w-full flex justify-center py-4 border-t-2 border-gray-300 font-mono text-gray-700 text-md">
     <div class="w-full max-w-4xl flex justify-between">
         <ul id="left-footer flex">
-            <li class="inline-block"><a href="/">< Notes ></Notes></a></li>
-            <li class="inline-block"><a href="/changelog.html">< Changelog ></Changelog></a></li>
+            <li class="inline-block"><a href="/">< Home ></Notes></a></li>
+            <li class="inline-block"><a href="/about.html">< About ></Notes></a></li>
         </ul>
         <ul id="right-footer">
+            <li class="inline-block"><a href="/changelog.html">< Changelog ></Changelog></a></li>
             <li class="inline-block">Made by < <a href="https://rw.omg.lol">Ross Wintle ></a></li>
         </ul>
     </div>
