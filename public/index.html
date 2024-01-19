@@ -73,16 +73,30 @@
                             <li class="mb-2">
                                 <a
                                     href="#"
-                                    @click.prevent="openNote(note.id)"
-                                    class="block text-gray-700 hover:text-gray-900"
-                                    :class="note.id === currentNote.id ? 'font-bold' : ''"
-                                    x-text="note.title">
+                                    class="block border-t border-gray-300 pt-2"
+                                    @click.prevent="openNote(note.id)">
+
+                                    <span
+                                        class="block text-gray-700 hover:text-gray-900"
+                                        :class="note.id === currentNote.id ? 'font-bold' : ''"
+                                        x-text="note.title">
+                                    </span>
+
+                                    <span
+                                        class="block text-gray-500 hover:text-gray-700 text-xs"
+                                        x-text="new Date(note.modified_at).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })">
+                                    </span>
                                 </a>
                             </li>
                         </template>
                     </ul>
                 </div>
             </template>
+
+            <div id="notesListMeta">
+                <p x-show="lastSave !== null" class="text-gray-600 italic text-sm">Last saved: <span x-text="new Date(lastSave).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })"></span> <span x-show="unsavedNotes">*</span></p>
+                <p x-show="lastSave === null" class="text-gray-600 italic text-sm">Not saved yet <span x-show="unsavedNotes">*</span></p>
+            </div>
         </div>
     </template>
 </div>

@@ -38,6 +38,8 @@ document.addEventListener('alpine:init', () => {
             editor: null,
 
             fileHandle: null,
+            unsavedNotes: false,
+            lastSave: null,
 
             init() {
                 console.log('Initing')
@@ -45,6 +47,16 @@ document.addEventListener('alpine:init', () => {
                 this.newEditor()
 
                 setInterval(this.maybeSaveFile.bind(this), 5000);
+
+                // Add the onbeforeunload event handler for unsaved notes
+                window.addEventListener('beforeunload', this.alertForUnsavedNotes.bind(this));
+            },
+
+            alertForUnsavedNotes(event) {
+                if (this.unsavedNotes) {
+                    event.preventDefault();
+                    return '';
+                }
             },
 
             newEditor() {
@@ -67,15 +79,29 @@ document.addEventListener('alpine:init', () => {
                 let lines = this.currentNote.body.split('\n')
                 this.currentNote.title = this.makeTitle(lines[0])
 
-                // TODO: Only set this is content has changed?
-                this.currentNote.modified_at = new Date().toISOString()
+                // TODO: Only set this if content has changed?
+                this.currentNote.modified_at = new Date().getTime()
+
+                // TODO: Remove temporary conversion at some point
+                if (typeof(this.currentNote.created_at) === 'string') {
+                    this.currentNote.created_at = this.convertIsoDateToTimestamp(this.currentNote.created_at)
+                }
+
                 let note = this.notes.find(note => note.id === this.currentNote.id)
                 if (note) {
                     this.notes.splice(this.notes.indexOf(note), 1, this.currentNote)
                 } else {
-                    this.notes.push(this.currentNote)
+                    this.notes.unshift(this.currentNote)
                     this.nextId++;
                 }
+                // Set the unsaved notes flag
+                this.unsavedNotes = true;
+                this.searchNotes()
+            },
+
+            // TODO: Remove temporary conversion function at some point
+            convertIsoDateToTimestamp(isoDate) {
+                return new Date(isoDate).getTime()
             },
 
             makeTitle(line) {
@@ -88,8 +114,8 @@ document.addEventListener('alpine:init', () => {
                     title: '# A new note',
                     body: '# A new note',
                     tags: [],
-                    created_at: new Date().toISOString(),
-                    modified_at: new Date().toISOString()
+                    created_at: new Date().getTime(),
+                    modified_at: new Date().getTime()
                 }
                 this.newEditor()
             },
@@ -107,6 +133,7 @@ document.addEventListener('alpine:init', () => {
                     this.saveFile()
                     this.newNote()
                 }
+                this.unsavedNotes = true;
             },
 
             /**
@@ -179,17 +206,30 @@ document.addEventListener('alpine:init', () => {
                     const fileContent = await file.text();
                     const data = JSON.parse(fileContent);
                     this.extractSaveData(data);
+                    // TODO: Note data structure migrations?
                 }
             },
 
             extractSaveData(data) {
                 this.tags = data.tags
                 this.nextId = data.nextId
-                this.notes = data.notes
+                this.notes = this.sortNotesByModifiedDate(data.notes)
                 this.filteredNotes = this.notes
                 // Archived notes added so needs a default
-                this.archivedNotes = data?.archivedNotes ?? []
+                this.archivedNotes = this.sortNotesByModifiedDate(data?.archivedNotes ?? [])
                 this.searchTerm = ''
+            },
+
+            sortNotesByModifiedDate(notes) {
+                return notes.sort((a, b) => {
+                    if (a.modified_at < b.modified_at) {
+                        return 1
+                    }
+                    if (a.modified_at > b.modified_at) {
+                        return -1
+                    }
+                    return 0
+                })
             },
 
             makeSaveData() {
@@ -206,6 +246,8 @@ document.addEventListener('alpine:init', () => {
                 const dataToSave = this.makeSaveData();
                 await writable.write(JSON.stringify(dataToSave, null, 2));
                 await writable.close();
+                this.unsavedNotes = false;
+                this.lastSave = new Date().getTime(); // Convert to Unix timestamp
             },
 
             async maybeSaveFile() {
