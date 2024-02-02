@@ -1,5 +1,5 @@
 <div class="w-full pr-3 mr-3 h-full border-r-2 border-gray-300">
-    <template x-if="browserHasFilesystemApi() && ! isFileOpen()">
+    <template x-if="browserHasFilesystemApi()">
         <div class="">
             <button id="newFileButton" @click="newFile" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
                 New File
@@ -22,7 +22,7 @@
             </div>
             <template x-if="isImporting">
                 <div>
-                    <input type="file" id="importFileInput" accept="application/json,.json">
+                    <input type="file" id="importFileInput" accept="application/json,.json" class="mb-4">
                     <input type="submit" value="Open" id="importFileButton" @click="importFile" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
                 </div>
             </template>
