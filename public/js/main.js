@@ -41,6 +41,9 @@ document.addEventListener('alpine:init', () => {
             unsavedNotes: false,
             lastSave: null,
 
+            isImporting: false,
+            importedFileName: '',
+
             init() {
                 console.log('Initing')
 
@@ -157,23 +160,34 @@ document.addEventListener('alpine:init', () => {
             /**
              * File handling
              */
+            browserHasFilesystemApi() {
+                return window.showSaveFilePicker !== undefined
+            },
 
             isFileOpen() {
                 return this.fileHandle !== null
             },
 
             async newFile() {
-                const options = {
-                    types: [
-                        {
-                            description: 'JSON',
-                            accept: {
-                                'application/json': ['.json']
+                if (this.unsavedNotes) {
+                    alert('You have unsaved notes!');
+                    return;
+                }
+
+                if (this.browserHasFilesystemApi()) {
+                    const options = {
+                        types: [
+                            {
+                                description: 'JSON',
+                                accept: {
+                                    'application/json': ['.json']
+                                }
                             }
-                        }
-                    ],
-                };
-                this.fileHandle = await window.showSaveFilePicker(options);
+                        ],
+                    };
+                    this.fileHandle = await window.showSaveFilePicker(options);
+                }
+
                 this.tags = []
                 this.nextId = 1
                 this.notes = []
@@ -242,6 +256,9 @@ document.addEventListener('alpine:init', () => {
             },
 
             async saveFile() {
+                if (! this.browserHasFilesystemApi()) {
+                    return;
+                }
                 const writable = await this.fileHandle.createWritable();
                 const dataToSave = this.makeSaveData();
                 await writable.write(JSON.stringify(dataToSave, null, 2));
@@ -256,6 +273,41 @@ document.addEventListener('alpine:init', () => {
                 }
             },
 
+            /*
+             * File functions for import/export without filesystem APIs
+             */
+            async importFile() {
+                if (this.unsavedNotes) {
+                    alert('You have unsaved notes!');
+                    return;
+                }
+
+                const importFile = document.getElementById('importFileInput').files[0];
+                if (importFile) {
+                    this.importedFileName = importFile.name;
+                    const fileContent = await importFile.text();
+                    const data = JSON.parse(fileContent);
+                    this.extractSaveData(data);
+                    // TODO: Error checking
+                    this.isImporting = false;
+                }
+            },
+
+            /*
+             * Export the notes to a JSON file.
+             */
+            async exportFile() {
+                const dataToSave = this.makeSaveData();
+                const blob = new Blob([JSON.stringify(dataToSave, null, 2)], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = this.importedFileName ?? 'notes.json';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            }
         }
     })
 })

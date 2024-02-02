@@ -42,7 +42,7 @@
 <main x-data="app" class="flex justify-center pb-12">
     <div id="sidebar-container" class="w-72 flex-shrink-0">
         <div class="w-full pr-3 mr-3 h-full border-r-2 border-gray-300">
-    <template x-if="! isFileOpen()">
+    <template x-if="browserHasFilesystemApi() && ! isFileOpen()">
         <div class="">
             <button id="newFileButton" @click="newFile" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
                 New File
@@ -53,52 +53,69 @@
         </div>
     </template>
 
-    <template x-if="isFileOpen()">
+    <template x-if="! browserHasFilesystemApi()">
         <div>
-            <input type="search" x-model="searchTerm" @input.debounce.500ms="searchNotes" class="w-full border-2 border-gray-300 rounded-md mb-4" placeholder="Search notes...">
-
-            <button @click="newNote" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
-                New Note
-            </button>
-
-            <template x-if="filteredNotes.length === 0">
-                <p class="text-gray-700">No notes found.</p>
-            </template>
-
-            <template x-if="filteredNotes.length > 0">
+            <div class="">
+                <button id="importFileButton" @click="isImporting = true" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
+                    Import
+                </button>
+                <button id="saveFileButton" @click="exportFile" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
+                    Save
+                </button>
+            </div>
+            <template x-if="isImporting">
                 <div>
-                    <p class="text-gray-700 mb-4">Found <span x-text="filteredNotes.length"></span> notes.</p>
-                    <ul>
-                        <template x-for="note in filteredNotes" :key="note.id">
-                            <li class="mb-2">
-                                <a
-                                    href="#"
-                                    class="block border-t border-gray-300 pt-2"
-                                    @click.prevent="openNote(note.id)">
-
-                                    <span
-                                        class="block text-gray-700 hover:text-gray-900"
-                                        :class="note.id === currentNote.id ? 'font-bold' : ''"
-                                        x-text="note.title">
-                                    </span>
-
-                                    <span
-                                        class="block text-gray-500 hover:text-gray-700 text-xs"
-                                        x-text="new Date(note.modified_at).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })">
-                                    </span>
-                                </a>
-                            </li>
-                        </template>
-                    </ul>
+                    <input type="file" id="importFileInput" accept="application/json,.json">
+                    <input type="submit" value="Open" id="importFileButton" @click="importFile" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
                 </div>
             </template>
-
-            <div id="notesListMeta">
-                <p x-show="lastSave !== null" class="text-gray-600 italic text-sm">Last saved: <span x-text="new Date(lastSave).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })"></span> <span x-show="unsavedNotes">*</span></p>
-                <p x-show="lastSave === null" class="text-gray-600 italic text-sm">Not saved yet <span x-show="unsavedNotes">*</span></p>
-            </div>
         </div>
     </template>
+
+    <div>
+        <input type="search" x-model="searchTerm" @input.debounce.500ms="searchNotes" class="w-full border-2 border-gray-300 rounded-md mb-4" placeholder="Search notes...">
+
+        <button @click="newNote" class="font-mono text-md py-2 px-4 mb-4 border-2 border-dashed">
+            New Note
+        </button>
+
+        <template x-if="filteredNotes.length === 0">
+            <p class="text-gray-700">No notes found.</p>
+        </template>
+
+        <template x-if="filteredNotes.length > 0">
+            <div>
+                <p class="text-gray-700 mb-4">Found <span x-text="filteredNotes.length"></span> notes.</p>
+                <ul>
+                    <template x-for="note in filteredNotes" :key="note.id">
+                        <li class="mb-2">
+                            <a
+                                href="#"
+                                class="block border-t border-gray-300 pt-2"
+                                @click.prevent="openNote(note.id)">
+
+                                <span
+                                    class="block text-gray-700 hover:text-gray-900"
+                                    :class="note.id === currentNote.id ? 'font-bold' : ''"
+                                    x-text="note.title">
+                                </span>
+
+                                <span
+                                    class="block text-gray-500 hover:text-gray-700 text-xs"
+                                    x-text="new Date(note.modified_at).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })">
+                                </span>
+                            </a>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </template>
+
+        <div id="notesListMeta">
+            <p x-show="lastSave !== null" class="text-gray-600 italic text-sm">Last saved: <span x-text="new Date(lastSave).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })"></span> <span x-show="unsavedNotes">*</span></p>
+            <p x-show="lastSave === null" class="text-gray-600 italic text-sm">Not saved yet <span x-show="unsavedNotes">*</span></p>
+        </div>
+    </div>
 </div>
     </div>
     <div id="editor-container" class="w-1/2 max-w-3xl">
