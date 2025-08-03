@@ -1,0 +1,35 @@
+/* Overrides for EasyMDE/Codemirror */
+
+/**
+ * Headings are just too darn big!
+ *
+ * This uses a type scale with a base of 16px and a 1.200 "Minor Third"
+ * scaling factor.
+ */
+.cm-s-easymde .cm-header-1 {
+    font-size: 2.49rem;
+}
+
+.cm-s-easymde .cm-header-2 {
+    font-size: 2.07rem;
+}
+
+.cm-s-easymde .cm-header-2 {
+    font-size: 1.73rem;
+}
+
+.cm-s-easymde .cm-header-3 {
+    font-size: 1.44rem;
+}
+
+.cm-s-easymde .cm-header-4 {
+    font-size: 1.2rem;
+}
+
+.cm-s-easymde .cm-header-5 {
+    font-size: 1rem;
+}
+
+.cm-s-easymde .cm-header-6 {
+    font-size: 1rem;
+}
